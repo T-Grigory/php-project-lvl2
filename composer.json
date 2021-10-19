@@ -1,0 +1,22 @@
+{
+    "name": "hexlet/code",
+    "description": "hexlet php-project-lvl2",
+    "license": "MIT",
+    "bin": [
+        "bin/gendiff"
+    ],
+    "require": {
+        "docopt/docopt": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hexlet\\Code\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Grigory Tydykov",
+            "email": "tydykov2022@mail.ru"
+        }
+    ]
+}
