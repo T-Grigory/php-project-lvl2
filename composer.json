@@ -9,9 +9,9 @@
         "docopt/docopt": "^1.0"
     },
     "autoload": {
-        "psr-4": {
-            "Hexlet\\Code\\": "src/"
-        }
+        "files": [
+            "src/Utils.php"
+        ]
     },
     "authors": [
         {
