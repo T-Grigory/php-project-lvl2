@@ -28,4 +28,4 @@ jobs:
         # Run Linter
         run: make lint
       - name: Run test
-        uses: paambaati/codeclimate-action@v2.6.0
+
