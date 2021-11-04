@@ -14,7 +14,8 @@
     },
     "autoload": {
         "files": [
-            "src/Utils.php"
+            "src/Utils.php",
+            "tests/UtilsTest.php"
         ]
     },
     "authors": [
