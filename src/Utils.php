@@ -4,6 +4,10 @@ namespace Differ\Utils;
 
 function genDiff(string $pathToFile1, string $pathToFile2): string
 {
+    if (!file_exists($pathToFile1) || !file_exists($pathToFile2)) {
+        throw new \Exception("invalid path to file!");
+    }
+
     $file1 = file_get_contents($pathToFile1);
     $file2 = file_get_contents($pathToFile2);
 
@@ -17,7 +21,6 @@ function genDiff(string $pathToFile1, string $pathToFile2): string
     $result = [];
 
     foreach ($dataMerge as $key => $value) {
-
         $normalizeValue = json_encode($value);
 
         $template = "{$key}: {$normalizeValue}";

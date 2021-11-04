@@ -1,0 +1,6 @@
+{
+  "timeout": 5,
+  "verbose": true,
+  "host": "hexlet.io",
+  "ip_address": "182.222.10.84"
+}
