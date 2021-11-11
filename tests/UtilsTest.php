@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\Test;
+namespace Differ\Tests;
 
 use PHPUnit\Framework\TestCase;
 use function Differ\Utils\genDiff;

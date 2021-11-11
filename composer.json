@@ -16,9 +16,12 @@
         "test": "phpunit tests"
     },
     "autoload": {
+        "psr-4": {
+            "App\\" : "src",
+            "Tests\\" : "tests"
+        },
         "files": [
-            "src/Utils.php",
-            "tests/UtilsTest.php"
+            "src/Utils.php"
         ]
     },
     "authors": [
