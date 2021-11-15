@@ -28,9 +28,10 @@ DOC;
 $args = \Docopt::handle($doc, array('version'=>'Grigory Tydykov 1.0'));
 $data = (array) $args;
 
-$path1 = $data['args']['<firstFile>'][0] === '/' ?  $data['args']['<firstFile>'] : __DIR__ . '/' . $data['args']['<firstFile>'];
-$path2 = $data['args']['<secondFile>'][0] === '/' ?  $data['args']['<secondFile>'] : __DIR__ . '/'. $data['args']['<secondFile>'];
+$path1 = $data['args']['<firstFile>'][0] === '/' ?  $data['args']['<firstFile>'] : trim(shell_exec('pwd')) . '/' . $data['args']['<firstFile>'];
+$path2 = $data['args']['<secondFile>'][0] === '/' ?  $data['args']['<secondFile>'] : trim(shell_exec('pwd')) . '/'. $data['args']['<secondFile>'];
 
 
 $diff = \Differ\Utils\genDiff($path1, $path2);
+
 print_r($diff);
