@@ -6,7 +6,9 @@
         "bin/gendiff"
     ],
     "require": {
-        "docopt/docopt": "^1.0"
+        "docopt/docopt": "^1.0",
+        "symfony/yaml": "^5.3",
+        "ext-json": "*"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.6",
@@ -20,7 +22,8 @@
             "Tests\\" : "tests/"
         },
         "files": [
-            "src/Utils.php"
+            "src/Utils.php",
+            "src/Parsers.php"
         ]
     },
     "authors": [

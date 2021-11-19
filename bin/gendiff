@@ -32,6 +32,8 @@ $path1 = $data['args']['<firstFile>'][0] === '/' ?  $data['args']['<firstFile>']
 $path2 = $data['args']['<secondFile>'][0] === '/' ?  $data['args']['<secondFile>'] : trim(shell_exec('pwd')) . '/'. $data['args']['<secondFile>'];
 
 
-$diff = \Differ\Utils\genDiff($path1, $path2);
+//$diff = \Differ\Utils\genDiff($path1, $path2);
+
+$diff = \Differ\Parsers\parser($path1, $path2);
 
 print_r($diff);

@@ -1,0 +1,5 @@
+---
+timeout: 20
+verbose: true
+host: hexlet.ru
+description: hexlet - practical programming courses.
