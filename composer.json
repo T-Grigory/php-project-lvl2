@@ -22,8 +22,10 @@
             "Tests\\" : "tests/"
         },
         "files": [
+            "src/Differ.php",
             "src/Utils.php",
-            "src/Parsers.php"
+            "src/Parsers.php",
+            "src/Stylish.php"
         ]
     },
     "authors": [
