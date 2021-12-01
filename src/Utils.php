@@ -18,8 +18,9 @@ function sortObjectProperty(object $data): object
 
 function copyObjectRecursive(object $data): object
 {
-    $newData = new class{
+    $newData = new class {
     };
+
     foreach ($data as $key => $value) {
         if (is_object($value)) {
             $newData->$key = copyObjectRecursive($value);
