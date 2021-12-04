@@ -4,10 +4,13 @@ namespace Differ\Differ;
 
 use function Differ\Utils\sortObjectProperty;
 use function Differ\Utils\objectMergeRecursive;
+use function Differ\Formatters\Stylish\stylish;
+use function Differ\Formatters\Plain\plainFormatter;
 
-function genDiff(object $data1, object $data2): array
+function genDiff($pathToFile1, $pathToFile2, $format = 'stylish'): string
 {
-    $merged = sortObjectProperty(objectMergeRecursive($data1, $data2));
+    $data = \Differ\Parsers\dataPreparation($pathToFile1, $pathToFile2);
+    $merged = sortObjectProperty(objectMergeRecursive($data[0], $data[1]));
 
     $iter = function ($merged, $data1, $data2) use (&$iter) {
         $values = get_object_vars($merged);
@@ -55,5 +58,14 @@ function genDiff(object $data1, object $data2): array
         }, $keys, $values);
     };
 
-    return $iter($merged, $data1, $data2);
+    $diff = $iter($merged, $data[0], $data[1]);
+
+    switch ($format) {
+        case 'stylish':
+            return stylish($diff);
+        case 'plain':
+            return plainFormatter($diff);
+        default:
+            throw new \Exception("uknown format: '{$format}'!");
+    }
 }

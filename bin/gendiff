@@ -30,10 +30,9 @@ $data = (array) $args;
 
 $path1 = $data['args']['<firstFile>'][0] === '/' ?  $data['args']['<firstFile>'] : trim(shell_exec('pwd')) . '/' . $data['args']['<firstFile>'];
 $path2 = $data['args']['<secondFile>'][0] === '/' ?  $data['args']['<secondFile>'] : trim(shell_exec('pwd')) . '/'. $data['args']['<secondFile>'];
+$format = $data['args']['--format'] ?? 'stylish';
 
 
-$diff = \Differ\Parsers\dataPreparation($path1, $path2);
-
-$result = \Differ\Stylish\stylish($diff);
+$result = \Differ\Differ\genDiff($path1, $path2, $format);
 
 print_r($result);

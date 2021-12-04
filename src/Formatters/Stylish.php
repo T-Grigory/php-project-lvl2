@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\Stylish;
+namespace Differ\Formatters\Stylish;
 
 function stylish($tree, $replacer = ' ', $spaceCount = 4, $startIndentSize = 2): string
 {

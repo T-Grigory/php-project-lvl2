@@ -18,7 +18,7 @@ function dataPreparation(string $pathToFile1, string $pathToFile2): array
     $data2 = parser($pathToFile2);
 
 
-    return \Differ\Differ\genDiff($data1, $data2);
+    return [$data1, $data2];
 }
 
 function parser(string $pathToFile): object
