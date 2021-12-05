@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests;
+namespace Differ\Tests;
 
 use PHPUnit\Framework\TestCase;
-use function \Differ\Differ\genDiff;
+
+use function Differ\Differ\genDiff;
 
 class DifferTest extends TestCase
 {
@@ -11,6 +12,7 @@ class DifferTest extends TestCase
 
     private string $expectedNested;
     private string $expectedPlain;
+    private string $expectedJson;
 
     private string $pathToJsonFile1;
     private string $pathToJsonFile2;
@@ -32,6 +34,7 @@ class DifferTest extends TestCase
 
         $this->expectedNested = file_get_contents($this->getFilePath('nested.txt')) . "\n";
         $this->expectedPlain = file_get_contents($this->getFilePath('plain.txt')) . "\n";
+        $this->expectedJson = file_get_contents($this->getFilePath('json.txt'));
     }
 
     public function testDiffFormatNested(): void
@@ -53,5 +56,18 @@ class DifferTest extends TestCase
         $differ2 = genDiff($this->pathToYmlFile1, $this->pathToYmlFile2, 'plain');
 
         $this->assertEquals($this->expectedPlain, $differ2);
+    }
+
+    public function testDiffFormatJson(): void
+    {
+        $expected = str_replace(["-", "\n"], "", $this->expectedJson);
+
+        $differ1 = genDiff($this->pathToJsonFile1, $this->pathToJsonFile2, 'json');
+
+        $this->assertEquals($expected, $differ1);
+
+        $differ2 = genDiff($this->pathToYmlFile1, $this->pathToYmlFile2, 'json');
+
+        $this->assertEquals($expected, $differ2);
     }
 }

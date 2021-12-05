@@ -6,6 +6,7 @@ use function Differ\Utils\sortObjectProperty;
 use function Differ\Utils\objectMergeRecursive;
 use function Differ\Formatters\Stylish\stylish;
 use function Differ\Formatters\Plain\plainFormatter;
+use function Differ\Formatters\Json\jsonFormatter;
 
 function genDiff($pathToFile1, $pathToFile2, $format = 'stylish'): string
 {
@@ -65,6 +66,8 @@ function genDiff($pathToFile1, $pathToFile2, $format = 'stylish'): string
             return stylish($diff);
         case 'plain':
             return plainFormatter($diff);
+        case 'json':
+            return jsonFormatter($diff);
         default:
             throw new \Exception("uknown format: '{$format}'!");
     }
