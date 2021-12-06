@@ -2,11 +2,6 @@
 
 namespace Differ\Formatters\Json;
 
-function getValue($data, $key, $isKeyExists)
-{
-    return $isKeyExists ? $data[$key] : '';
-}
-
 function jsonFormatter($tree): string
 {
     $iter = function ($tree) use (&$iter) {
@@ -19,8 +14,8 @@ function jsonFormatter($tree): string
                 $isKeyBefore = array_key_exists('before', $item);
                 $isKeyAfter = array_key_exists('after', $item);
 
-                $value1 = getValue($item, 'before', $isKeyBefore);
-                $value2 = getValue($item, 'after', $isKeyAfter);
+                $value1 = $isKeyBefore ? $item['before'] : '';
+                $value2 = $isKeyAfter ? $item['after'] : '';
 
                 $updatedValue1 = json_encode($value1);
                 $updatedValue2 = json_encode($value2);

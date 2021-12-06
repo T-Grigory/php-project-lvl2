@@ -2,11 +2,6 @@
 
 namespace Differ\Formatters\Plain;
 
-function getValue($data, $key, $isKeyExists)
-{
-    return $isKeyExists ? $data[$key] : '';
-}
-
 function getNormalizeValue($value)
 {
     if (is_object($value)) {
@@ -18,14 +13,13 @@ function getNormalizeValue($value)
     }
 }
 
-function plainFormatter($tree): string
+function plainFormatter(array $tree): string
 {
-    $iter = function ($tree, $acc) use (&$iter) {
+    $iter = function (array $tree, string $acc) use (&$iter) {
         $lines = array_map(function ($node) use ($iter, $acc) {
 
             $key = $node['name'];
             $property = $acc === '' ? "{$key}" : "{$acc}.{$key}";
-
 
             if ($node['type'] === 'node') {
                 return $iter($node['children'], $property);
@@ -35,8 +29,8 @@ function plainFormatter($tree): string
                 $isKeyBefore = array_key_exists('before', $node);
                 $isKeyAfter = array_key_exists('after', $node);
 
-                $value1 = getValue($node, 'before', $isKeyBefore);
-                $value2 = getValue($node, 'after', $isKeyAfter);
+                $value1 = $isKeyBefore ? $node['before'] : '';
+                $value2 = $isKeyAfter ? $node['after'] : '';
 
                 $updatedValue1 = getNormalizeValue($value1);
                 $updatedValue2 = getNormalizeValue($value2);

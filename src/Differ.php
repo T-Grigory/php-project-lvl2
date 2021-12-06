@@ -8,12 +8,12 @@ use function Differ\Formatters\Stylish\stylish;
 use function Differ\Formatters\Plain\plainFormatter;
 use function Differ\Formatters\Json\jsonFormatter;
 
-function genDiff($pathToFile1, $pathToFile2, $format = 'stylish'): string
+function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
 {
     $data = \Differ\Parsers\dataPreparation($pathToFile1, $pathToFile2);
     $merged = sortObjectProperty(objectMergeRecursive($data[0], $data[1]));
 
-    $iter = function ($merged, $data1, $data2) use (&$iter) {
+    $iter = function (object $merged, object $data1, object $data2) use (&$iter) {
         $values = get_object_vars($merged);
         $keys = array_keys($values);
 

@@ -17,7 +17,6 @@ function dataPreparation(string $pathToFile1, string $pathToFile2): array
     $data1 = parser($pathToFile1);
     $data2 = parser($pathToFile2);
 
-
     return [$data1, $data2];
 }
 
