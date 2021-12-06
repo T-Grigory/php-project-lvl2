@@ -52,5 +52,5 @@ function plainFormatter(array $tree): string
         return implode("\n", $filtered);
     };
 
-    return $iter($tree, '') . "\n";
+    return $iter($tree, ''); //. "\n";
 }

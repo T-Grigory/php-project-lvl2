@@ -78,5 +78,5 @@ function stylish($tree, $replacer = ' ', $spaceCount = 4, $startIndentSize = 2):
         return implode("\n", $result);
     };
 
-    return $iter($tree, $startIndentSize, false) . "\n";
+    return $iter($tree, $startIndentSize, false); //. "\n";
 }

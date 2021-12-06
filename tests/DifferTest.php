@@ -32,8 +32,8 @@ class DifferTest extends TestCase
         $this->pathToYmlFile1 = $this->getFilePath('file1.yml');
         $this->pathToYmlFile2 = $this->getFilePath('file2.yml');
 
-        $this->expectedNested = file_get_contents($this->getFilePath('nested.txt')) . "\n";
-        $this->expectedPlain = file_get_contents($this->getFilePath('plain.txt')) . "\n";
+        $this->expectedNested = file_get_contents($this->getFilePath('nested.txt')); // . "\n";
+        $this->expectedPlain = file_get_contents($this->getFilePath('plain.txt')); // . "\n";
         $this->expectedJson = file_get_contents($this->getFilePath('json.txt'));
     }
 
