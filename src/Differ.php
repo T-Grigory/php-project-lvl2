@@ -13,15 +13,17 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
 
 
     $iter = function ($data1, $data2) use (&$iter) {
-        $merged = array_merge((array) $data1, (array) $data2);
+        $updatedData1 = (array) $data1;
+        $updatedData2 = (array) $data2;
+        $merged = array_merge($updatedData1, $updatedData2);
         $keys = sort(array_keys($merged), fn ($left, $right) => strcmp($left, $right));
 
-        return array_map(function ($key) use (&$iter, $data1, $data2) {
-            $isKeyExistsData1 = property_exists($data1, $key);
-            $isKeyExistsData2 = property_exists($data2, $key);
+        return array_map(function ($key) use (&$iter, $updatedData1, $updatedData2) {
+            $isKeyExistsData1 = array_key_exists($key, $updatedData1);
+            $isKeyExistsData2 = array_key_exists($key, $updatedData2);
 
-            $value1 = $isKeyExistsData1 ? $data1->$key : '';
-            $value2 = $isKeyExistsData2 ? $data2->$key : '';
+            $value1 = $isKeyExistsData1 ? $updatedData1[$key] : '';
+            $value2 = $isKeyExistsData2 ? $updatedData2[$key] : '';
 
             $isObjectValue1 = $isKeyExistsData1 && is_object($value1);
             $isObjectValue2 = $isKeyExistsData2 && is_object($value2);
