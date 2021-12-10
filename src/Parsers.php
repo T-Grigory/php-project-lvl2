@@ -22,9 +22,11 @@ function dataPreparation(string $pathToFile1, string $pathToFile2): array
 
 function parser(string $pathToFile): object
 {
-    $extension = substr($pathToFile, (strrpos($pathToFile, '.') ?? 0) + 1);
-    $data = file_get_contents($pathToFile) ?? '';
 
+    $indexExtension = strrpos($pathToFile, '.');
+    $extension = substr($pathToFile, ($indexExtension === false ? 0 : $indexExtension) + 1);
+    $content = file_get_contents($pathToFile);
+    $data = $content === false ? '' : $content;
     return in_array($extension, EXTENSIONS_YAML, true) ?
         Yaml::parse($data, Yaml::PARSE_OBJECT_FOR_MAP) :
         json_decode($data);

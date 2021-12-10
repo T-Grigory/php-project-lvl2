@@ -8,7 +8,8 @@ function stylish(array $tree, string $replacer = ' ', int $spaceCount = 4, int $
     $iter = function ($tree, $indentSize, $innerIter) use (&$iter, $replacer, $spaceCount) {
 
         if (!is_array($tree)) {
-            return trim(json_encode($tree) ?? '', "\"");
+            $value = json_encode($tree) === false ? '' : json_encode($tree);
+            return trim($value, "\"");
         }
 
         $currentIndent = str_repeat($replacer, $indentSize);
@@ -43,13 +44,9 @@ function stylish(array $tree, string $replacer = ' ', int $spaceCount = 4, int $
                         $normalizeBefore = is_object($value1) ? (array) $value1 : $value1;
                         $before = $iter($normalizeBefore, $newIndentSize, true);
 
-
-                        if ($type === 'changed') {
-                            $value2 = $node['value'][1];
-                            $normalizeAfter = is_object($value2) ? (array) $value2 : $value2;
-                            $after = $iter($normalizeAfter, $newIndentSize, true);
-                        }
-
+                        $value2 = $type === 'changed' ? $node['value'][1] : '';
+                        $normalizeAfter = is_object($value2) ? (array) $value2 : $value2;
+                        $after = $iter($normalizeAfter, $newIndentSize, true);
 
                         if ($type === 'added') {
                             return "{$currentIndent}+ {$key}: {$before}";

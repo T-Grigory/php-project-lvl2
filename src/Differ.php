@@ -20,13 +20,8 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
             $isKeyExistsData1 = property_exists($data1, $key);
             $isKeyExistsData2 = property_exists($data2, $key);
 
-            if ($isKeyExistsData1) {
-                $value1 = $data1->$key;
-            }
-
-            if ($isKeyExistsData2) {
-                $value2 = $data2->$key;
-            }
+            $value1 = $isKeyExistsData1 ? $data1->$key : '';
+            $value2 = $isKeyExistsData2 ? $data2->$key : '';
 
             $isObjectValue1 = $isKeyExistsData1 && is_object($value1);
             $isObjectValue2 = $isKeyExistsData2 && is_object($value2);
