@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters\Plain;
 
-function getNormalizeValue($value)
+function getNormalizeValue(mixed $value): string
 {
     if (is_object($value)) {
         return '[complex value]';
