@@ -2,30 +2,31 @@
 
 namespace Differ\Formatters\Json;
 
-function jsonFormatter($tree): string
+function jsonFormatter(array $tree): string
 {
-    $iter = function ($tree) use (&$iter) {
-        $lines = array_map(function ($item) use ($iter) {
-            $key = $item['name'];
+    $iter = function (array $tree) use (&$iter) {
+        $lines = array_map(function ($node) use ($iter) {
+            $key = $node['name'];
+            $type = $node['type'];
 
-            if ($item['type'] === 'node') {
-                return "\"{$key}\":{$iter($item['children'])}";
+            if ($type === 'node') {
+                return "\"{$key}\":{$iter($node['children'])}";
             } else {
-                $isKeyBefore = array_key_exists('before', $item);
-                $isKeyAfter = array_key_exists('after', $item);
+                $value1 = $node['value'][0];
+                $value2 = $type === 'changed' ? $node['value'][1] : '';
 
-                $value1 = $isKeyBefore ? $item['before'] : '';
-                $value2 = $isKeyAfter ? $item['after'] : '';
 
                 $updatedValue1 = json_encode($value1);
                 $updatedValue2 = json_encode($value2);
 
-                if (!$isKeyBefore && $isKeyAfter) {
-                    return "\"{$key}\":{\"after\":{$updatedValue2}}";
-                } elseif ($isKeyBefore && !$isKeyAfter) {
+                if ($type === 'added') {
+                    return "\"{$key}\":{\"after\":{$updatedValue1}}";
+                } elseif ($type === 'removed') {
                     return "\"{$key}\":{\"before\":{$updatedValue1}}";
-                } else {
+                } elseif ($type === 'changed') {
                     return "\"$key\":{\"before\":{$updatedValue1},\"after\":{$updatedValue2}}";
+                } else {
+                    return "\"$key\":{\"before\":{$updatedValue1},\"after\":{$updatedValue1}}";
                 }
             }
         },

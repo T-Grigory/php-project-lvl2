@@ -2,64 +2,72 @@
 
 namespace Differ\Differ;
 
-use function Differ\Utils\sortObjectProperty;
-use function Differ\Utils\objectMergeRecursive;
 use function Differ\Formatters\Stylish\stylish;
 use function Differ\Formatters\Plain\plainFormatter;
 use function Differ\Formatters\Json\jsonFormatter;
+use function Functional\sort;
 
 function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
 {
     $data = \Differ\Parsers\dataPreparation($pathToFile1, $pathToFile2);
-    $merged = sortObjectProperty(objectMergeRecursive($data[0], $data[1]));
 
-    $iter = function (object $merged, object $data1, object $data2) use (&$iter) {
-        $values = get_object_vars($merged);
-        $keys = array_keys($values);
 
-        return array_map(function ($key, $value) use (&$iter, $data1, $data2) {
-            $isKeyData1 = property_exists($data1, $key);
-            $isKeyData2 = property_exists($data2, $key);
+    $iter = function ($data1, $data2) use (&$iter) {
+        $merged = array_merge((array) $data1, (array) $data2);
+        $keys = sort(array_keys($merged), fn ($left, $right) => strcmp($left, $right));
 
-            $value1 = '';
-            $value2 = '';
+        return array_map(function ($key) use (&$iter, $data1, $data2) {
+            $isKeyExistsData1 = property_exists($data1, $key);
+            $isKeyExistsData2 = property_exists($data2, $key);
 
-            if ($isKeyData1) {
+            if ($isKeyExistsData1) {
                 $value1 = $data1->$key;
             }
 
-            if ($isKeyData2) {
+            if ($isKeyExistsData2) {
                 $value2 = $data2->$key;
             }
 
-            $isObjectValue1 = isset($value1) && is_object($value1);
-            $isObjectValue2 = isset($value2) && is_object($value2);
+            $isObjectValue1 = $isKeyExistsData1 && is_object($value1);
+            $isObjectValue2 = $isKeyExistsData2 && is_object($value2);
 
             if ($isObjectValue1 && $isObjectValue2) {
                 return [
                     "name" => $key,
                     "type" => "node",
-                    "children" => $iter($value, $value1, $value2)
+                    "children" => $iter($value1, $value2)
                 ];
             } else {
-                $result = [
-                    "name"   => $key,
-                    "type"   => "leaf"
-                ];
-
-                if ($isKeyData1) {
-                    $result["before"] = $value1;
+                if ($isKeyExistsData1 && !$isKeyExistsData2) {
+                    return [
+                        "name"   => $key,
+                        "type"   => "removed",
+                        "value" => [$value1]
+                    ];
+                } elseif (!$isKeyExistsData1 && $isKeyExistsData2) {
+                    return [
+                        "name"   => $key,
+                        "type"   => "added",
+                        "value" => [$value2]
+                    ];
+                } elseif ($value1 !== $value2) {
+                    return [
+                        "name"   => $key,
+                        "type"   => "changed",
+                        "value" => [$value1, $value2]
+                    ];
+                } else {
+                    return [
+                        "name" => $key,
+                        "type" => "unchanged",
+                        "value" => [$value1]
+                    ];
                 }
-                if ($isKeyData2) {
-                    $result["after"] = $value2;
-                }
-
-                return $result;
             }
-        }, $keys, $values);
+        }, $keys);
     };
 
-    $diff = $iter($merged, $data[0], $data[1]);
+    $diff = $iter($data[0], $data[1]);
 
     switch ($format) {
         case 'stylish':

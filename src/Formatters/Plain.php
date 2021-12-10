@@ -20,26 +20,24 @@ function plainFormatter(array $tree): string
 
             $key = $node['name'];
             $property = $acc === '' ? "{$key}" : "{$acc}.{$key}";
+            $type = $node['type'];
 
-            if ($node['type'] === 'node') {
+            if ($type === 'node') {
                 return $iter($node['children'], $property);
             } else {
                 $template = "Property '{$property}' was";
 
-                $isKeyBefore = array_key_exists('before', $node);
-                $isKeyAfter = array_key_exists('after', $node);
-
-                $value1 = $isKeyBefore ? $node['before'] : '';
-                $value2 = $isKeyAfter ? $node['after'] : '';
+                $value1 = $node['value'][0];
+                $value2 = $type === 'changed' ? $node['value'][1] : '';
 
                 $updatedValue1 = getNormalizeValue($value1);
                 $updatedValue2 = getNormalizeValue($value2);
 
-                if (!$isKeyBefore && $isKeyAfter) {
-                    return "{$template} added with value: {$updatedValue2}";
-                } elseif ($isKeyBefore && !$isKeyAfter) {
+                if ($type === 'added') {
+                    return "{$template} added with value: {$updatedValue1}";
+                } elseif ($type === 'removed') {
                     return "{$template} removed";
-                } elseif ($updatedValue1 !== $updatedValue2) {
+                } elseif ($type === 'changed') {
                     return "{$template} updated. From {$updatedValue1} to {$updatedValue2}";
                 } else {
                     return '';
