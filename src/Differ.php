@@ -9,7 +9,11 @@ use function Functional\sort;
 
 function getAbsolutePath(string $path): string
 {
-    return trim(shell_exec('pwd')) . "/{$path}";
+    $pathToRootProject = shell_exec('pwd');
+    if (!is_string($pathToRootProject)) {
+        throw new \Exception('Unexpected error!');
+    }
+    return trim($pathToRootProject) . "/{$path}";
 }
 
 function isAbsolutePath(string $path): bool
