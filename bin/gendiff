@@ -28,9 +28,7 @@ $data = (array) $args;
 
 $path1 = $data['args']['<firstFile>'];
 $path2 = $data['args']['<secondFile>'];
-$format = $data['args']['--format'];
-
-
+$format = $data['args']['--format'] ?? 'stylish';
 
 $result = \Differ\Differ\genDiff($path1, $path2, $format);
 

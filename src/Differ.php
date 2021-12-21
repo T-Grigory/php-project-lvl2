@@ -17,11 +17,10 @@ function isAbsolutePath(string $path): bool
     return $path[0] === '/';
 }
 
-function genDiff(string $path1, string $path2, mixed $format): string
+function genDiff(string $path1, string $path2, string $format = 'stylish'): string
 {
     $pathToFile1 = isAbsolutePath($path1) ?  $path1 : getAbsolutePath($path1);
     $pathToFile2 = isAbsolutePath($path2) ?  $path2 : getAbsolutePath($path2);
-    $format = $format ?? 'stylish';
 
     $data = \Differ\Parsers\dataPreparation($pathToFile1, $pathToFile2);
 
