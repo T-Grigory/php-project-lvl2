@@ -7,10 +7,23 @@ use function Differ\Formatters\Plain\plainFormatter;
 use function Differ\Formatters\Json\jsonFormatter;
 use function Functional\sort;
 
-function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
+function getAbsolutePath(string $path): string
 {
-    $data = \Differ\Parsers\dataPreparation($pathToFile1, $pathToFile2);
+    return trim(shell_exec('pwd')) . "/{$path}";
+}
 
+function isAbsolutePath(string $path): bool
+{
+    return $path[0] === '/';
+}
+
+function genDiff(string $path1, string $path2, mixed $format): string
+{
+    $pathToFile1 = isAbsolutePath($path1) ?  $path1 : getAbsolutePath($path1);
+    $pathToFile2 = isAbsolutePath($path2) ?  $path2 : getAbsolutePath($path2);
+    $format = $format ?? 'stylish';
+
+    $data = \Differ\Parsers\dataPreparation($pathToFile1, $pathToFile2);
 
     $iter = function ($data1, $data2) use (&$iter) {
         $updatedData1 = (array) $data1;
@@ -37,20 +50,20 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
             } else {
                 if ($isKeyExistsData1 && !$isKeyExistsData2) {
                     return [
-                        "name"   => $key,
-                        "type"   => "removed",
+                        "name" => $key,
+                        "type" => "removed",
                         "value" => [$value1]
                     ];
                 } elseif (!$isKeyExistsData1 && $isKeyExistsData2) {
                     return [
-                        "name"   => $key,
-                        "type"   => "added",
+                        "name" => $key,
+                        "type" => "added",
                         "value" => [$value2]
                     ];
                 } elseif ($value1 !== $value2) {
                     return [
-                        "name"   => $key,
-                        "type"   => "changed",
+                        "name" => $key,
+                        "type" => "changed",
                         "value" => [$value1, $value2]
                     ];
                 } else {
@@ -66,14 +79,15 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
 
     $diff = $iter($data[0], $data[1]);
 
-    switch ($format) {
-        case 'stylish':
-            return stylish($diff);
-        case 'plain':
-            return plainFormatter($diff);
-        case 'json':
-            return jsonFormatter($diff);
-        default:
-            throw new \Exception("uknown format: '{$format}'!");
-    }
+    return selectFormatter($diff, $format);
+}
+
+function selectFormatter(array $diff, string $format): string
+{
+    return match ($format) {
+        'stylish' => stylish($diff),
+        'plain' => plainFormatter($diff),
+        'json' => jsonFormatter($diff),
+        default => throw new \Exception("uknown format: '{$format}'!"),
+    };
 }

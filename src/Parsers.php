@@ -9,7 +9,6 @@ const EXTENSIONS_YAML = ['yml', 'yaml'];
 
 function dataPreparation(string $pathToFile1, string $pathToFile2): array
 {
-
     if (!file_exists($pathToFile1) || !file_exists($pathToFile2)) {
         throw new \Exception("invalid path to file!");
     }
@@ -22,12 +21,19 @@ function dataPreparation(string $pathToFile1, string $pathToFile2): array
 
 function parser(string $pathToFile): object
 {
-
     $indexExtension = strrpos($pathToFile, '.');
-    $extension = substr($pathToFile, ($indexExtension === false ? 0 : $indexExtension) + 1);
+
+    if ($indexExtension === false) {
+        throw new \Exception("No file extension!");
+    }
+    $extension = substr($pathToFile, $indexExtension + 1);
     $content = file_get_contents($pathToFile);
-    $data = $content === false ? '' : $content;
+
+    if ($content === false) {
+        throw new \Exception("Unexpected error!");
+    }
+
     return in_array($extension, EXTENSIONS_YAML, true) ?
-        Yaml::parse($data, Yaml::PARSE_OBJECT_FOR_MAP) :
-        json_decode($data);
+        Yaml::parse($content, Yaml::PARSE_OBJECT_FOR_MAP) :
+        json_decode($content);
 }

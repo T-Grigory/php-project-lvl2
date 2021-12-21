@@ -9,7 +9,6 @@ if (file_exists($autoloadPath1)) {
     require_once $autoloadPath2;
 }
 
-
 $doc = <<<DOC
 Generate diff
 
@@ -24,13 +23,13 @@ Options:
   --format <fmt> Report format [default: stylish]
 DOC;
 
-
 $args = \Docopt::handle($doc, array('version'=>'Grigory Tydykov 1.0'));
 $data = (array) $args;
 
-$path1 = $data['args']['<firstFile>'][0] === '/' ?  $data['args']['<firstFile>'] : trim(shell_exec('pwd')) . '/' . $data['args']['<firstFile>'];
-$path2 = $data['args']['<secondFile>'][0] === '/' ?  $data['args']['<secondFile>'] : trim(shell_exec('pwd')) . '/'. $data['args']['<secondFile>'];
-$format = $data['args']['--format'] ?? 'stylish';
+$path1 = $data['args']['<firstFile>'];
+$path2 = $data['args']['<secondFile>'];
+$format = $data['args']['--format'];
+
 
 
 $result = \Differ\Differ\genDiff($path1, $path2, $format);

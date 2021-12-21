@@ -14,59 +14,28 @@ class DifferTest extends TestCase
     }
 
     /**
-     * @dataProvider diffFormatNestedProvider
+     * @dataProvider diffProvider
      */
 
-    public function testDiffFormatNested($actualNested, $expectedNested): void
+    public function testDiff($file1, $file2, $format, $expected): void
     {
-        $this->assertEquals($expectedNested, $actualNested);
+        $actual = genDiff($this->getFilePath($file1), $this->getFilePath($file2), $format);
+        $this->assertEquals($expected, $actual);
     }
 
-    public function diffFormatNestedProvider(): array
+    public function diffProvider(): array
     {
         $expectedNested = file_get_contents($this->getFilePath('nested.txt'));
-
-        return [
-          [genDiff($this->getFilePath('file1.json'), $this->getFilePath('file2.json')), $expectedNested],
-          [genDiff($this->getFilePath('file1.yml'), $this->getFilePath('file2.yml')), $expectedNested]
-        ];
-    }
-
-    /**
-     * @dataProvider diffFormatPlainProvider
-     */
-
-    public function testDiffFormatPlain($actualPlain, $expectedPlain): void
-    {
-        $this->assertEquals($expectedPlain, $actualPlain);
-    }
-
-    public function diffFormatPlainProvider(): array
-    {
         $expectedPlain = file_get_contents($this->getFilePath('plain.txt'));
-
-        return [
-            [genDiff($this->getFilePath('file1.json'), $this->getFilePath('file2.json'), 'plain'), $expectedPlain],
-            [genDiff($this->getFilePath('file1.yml'), $this->getFilePath('file2.yml'), 'plain'), $expectedPlain]
-        ];
-    }
-
-    /**
-     * @dataProvider diffFormatJsonProvider
-     */
-
-    public function testDiffFormatJson($actualJson, $expectedJson): void
-    {
-        $this->assertEquals($expectedJson, $actualJson);
-    }
-
-    public function diffFormatJsonProvider(): array
-    {
         $expectedJson = str_replace(["-", "\n"], "", file_get_contents($this->getFilePath('json.txt')));
 
         return [
-            [genDiff($this->getFilePath('file1.json'), $this->getFilePath('file2.json'), 'json'), $expectedJson],
-            [genDiff($this->getFilePath('file1.yml'), $this->getFilePath('file2.yml'), 'json'), $expectedJson]
+            ['file1.json', 'file2.json', 'stylish', $expectedNested],
+            ['file1.yml', 'file2.yml', 'stylish', $expectedNested],
+            ['file1.json', 'file2.json', 'plain', $expectedPlain],
+            ['file1.yml', 'file2.yml', 'plain', $expectedPlain],
+            ['file1.json', 'file2.json', 'json', $expectedJson],
+            ['file1.yml', 'file2.yml', 'json', $expectedJson]
         ];
     }
 }
