@@ -7,8 +7,8 @@ use function Differ\Select\Formatter\selectFormatter;
 
 function getAbsolutePath(string $path): string
 {
-    exec('pwd', $dir, $resultCode);
-    if ($resultCode !== 0) {
+    $result = exec('pwd', $dir);
+    if ($result === false) {
         throw new \Exception('Unexpected error!');
     }
 
