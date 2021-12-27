@@ -2,18 +2,17 @@
 
 namespace Differ\Differ;
 
-use function Differ\Formatters\Stylish\stylish;
-use function Differ\Formatters\Plain\plainFormatter;
-use function Differ\Formatters\Json\jsonFormatter;
 use function Functional\sort;
+use function Differ\Select\Formatter\selectFormatter;
 
 function getAbsolutePath(string $path): string
 {
-    $workingDirectory = shell_exec('pwd');
-    if (!is_string($workingDirectory)) {
+    exec('pwd', $dir, $resultCode);
+    if ($resultCode !== 0) {
         throw new \Exception('Unexpected error!');
     }
-    return trim($workingDirectory) . "/{$path}";
+
+    return trim($dir[0]) . "/{$path}";
 }
 
 function isAbsolutePath(string $path): bool
@@ -23,8 +22,8 @@ function isAbsolutePath(string $path): bool
 
 function genDiff(string $path1, string $path2, string $format = 'stylish'): string
 {
-    $pathToFile1 = isAbsolutePath($path1) ?  $path1 : getAbsolutePath($path1);
-    $pathToFile2 = isAbsolutePath($path2) ?  $path2 : getAbsolutePath($path2);
+    $pathToFile1 = isAbsolutePath($path1) ? $path1 : getAbsolutePath($path1);
+    $pathToFile2 = isAbsolutePath($path2) ? $path2 : getAbsolutePath($path2);
 
     $data = \Differ\Parsers\dataPreparation($pathToFile1, $pathToFile2);
 
@@ -83,14 +82,4 @@ function genDiff(string $path1, string $path2, string $format = 'stylish'): stri
     $diff = $iter($data[0], $data[1]);
 
     return selectFormatter($diff, $format);
-}
-
-function selectFormatter(array $diff, string $format): string
-{
-    return match ($format) {
-        'stylish' => stylish($diff),
-        'plain' => plainFormatter($diff),
-        'json' => jsonFormatter($diff),
-        default => throw new \Exception("uknown format: '{$format}'!"),
-    };
 }

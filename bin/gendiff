@@ -1,6 +1,20 @@
 #!/usr/bin/env php
 <?php
 
+$doc = <<<DOC
+Generate diff
+
+Usage:
+  gendiff (-h|--help)
+  gendiff (-v|--version)
+  gendiff [--format <fmt>] <firstFile> <secondFile> 
+
+Options:
+  -h --help         Show this screen.
+  --version         Show version.
+  --format <fmt>    Report format [default: stylish].
+DOC;
+
 $autoloadPath1 = __DIR__ . '/../../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
 if (file_exists($autoloadPath1)) {
@@ -9,26 +23,12 @@ if (file_exists($autoloadPath1)) {
     require_once $autoloadPath2;
 }
 
-$doc = <<<DOC
-Generate diff
-
-Usage:
-  gendiff (-h|--help)
-  gendiff (-v|--version)
-  gendiff [--format <fmt>] <firstFile> <secondFile>
-
-Options:
-  -h --help     Show this screen.
-  --version     Show version.
-  --format <fmt> Report format [default: stylish]
-DOC;
-
 $args = \Docopt::handle($doc, array('version'=>'Grigory Tydykov 1.0'));
 $data = (array) $args;
 
 $path1 = $data['args']['<firstFile>'];
 $path2 = $data['args']['<secondFile>'];
-$format = $data['args']['--format'] ?? 'stylish';
+$format = $data['args']['--format'];
 
 $result = \Differ\Differ\genDiff($path1, $path2, $format);
 
