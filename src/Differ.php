@@ -2,8 +2,10 @@
 
 namespace Differ\Differ;
 
-use function Functional\sort;
-use function Differ\Select\Formatter\selectFormatter;
+use function Differ\Format\formatData;
+use function Differ\Parsers\dataPreparation;
+use function Differ\Parsers\parser;
+use function Differ\AST\generateAST;
 
 function getAbsolutePath(string $path): string
 {
@@ -25,61 +27,12 @@ function genDiff(string $path1, string $path2, string $format = 'stylish'): stri
     $pathToFile1 = isAbsolutePath($path1) ? $path1 : getAbsolutePath($path1);
     $pathToFile2 = isAbsolutePath($path2) ? $path2 : getAbsolutePath($path2);
 
-    $data = \Differ\Parsers\dataPreparation($pathToFile1, $pathToFile2);
+    $data1 = dataPreparation($pathToFile1);
+    $data2 = dataPreparation($pathToFile2);
 
-    $iter = function ($data1, $data2) use (&$iter) {
-        $updatedData1 = (array) $data1;
-        $updatedData2 = (array) $data2;
-        $merged = array_merge($updatedData1, $updatedData2);
-        $keys = sort(array_keys($merged), fn ($left, $right) => strcmp($left, $right));
+    $data = [parser($data1['data'], $data1['extension']), parser($data2['data'], $data2['extension'])];
 
-        return array_map(function ($key) use (&$iter, $updatedData1, $updatedData2) {
-            $isKeyExistsData1 = array_key_exists($key, $updatedData1);
-            $isKeyExistsData2 = array_key_exists($key, $updatedData2);
+    $diff = generateAST($data[0], $data[1]);
 
-            $value1 = $isKeyExistsData1 ? $updatedData1[$key] : '';
-            $value2 = $isKeyExistsData2 ? $updatedData2[$key] : '';
-
-            $isObjectValue1 = $isKeyExistsData1 && is_object($value1);
-            $isObjectValue2 = $isKeyExistsData2 && is_object($value2);
-
-            if ($isObjectValue1 && $isObjectValue2) {
-                return [
-                    "name" => $key,
-                    "type" => "node",
-                    "children" => $iter($value1, $value2)
-                ];
-            } else {
-                if ($isKeyExistsData1 && !$isKeyExistsData2) {
-                    return [
-                        "name" => $key,
-                        "type" => "removed",
-                        "value" => [$value1]
-                    ];
-                } elseif (!$isKeyExistsData1 && $isKeyExistsData2) {
-                    return [
-                        "name" => $key,
-                        "type" => "added",
-                        "value" => [$value2]
-                    ];
-                } elseif ($value1 !== $value2) {
-                    return [
-                        "name" => $key,
-                        "type" => "changed",
-                        "value" => [$value1, $value2]
-                    ];
-                } else {
-                    return [
-                        "name" => $key,
-                        "type" => "unchanged",
-                        "value" => [$value1]
-                    ];
-                }
-            }
-        }, $keys);
-    };
-
-    $diff = $iter($data[0], $data[1]);
-
-    return selectFormatter($diff, $format);
+    return formatData($diff, $format);
 }

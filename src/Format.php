@@ -1,12 +1,12 @@
 <?php
 
-namespace Differ\Select\Formatter;
+namespace Differ\Format;
 
 use function Differ\Formatters\Stylish\stylish;
 use function Differ\Formatters\Plain\plainFormatter;
 use function Differ\Formatters\Json\jsonFormatter;
 
-function selectFormatter(array $diff, string $format): string
+function formatData(array $diff, string $format): string
 {
     return match ($format) {
         'stylish' => stylish($diff),

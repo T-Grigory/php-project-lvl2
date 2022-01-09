@@ -24,8 +24,9 @@
         },
         "files": [
             "src/Differ.php",
+            "src/AST.php",
             "src/Parsers.php",
-            "src/Select-Formatter.php",
+            "src/Format.php",
             "src/Formatters/Stylish.php",
             "src/Formatters/Plain.php",
             "src/Formatters/Json.php"
