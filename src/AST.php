@@ -4,7 +4,7 @@ namespace Differ\AST;
 
 use function Functional\sort;
 
-function generateAST($data1, $data2): array
+function generateAST(object $data1, object $data2): array
 {
     $updatedData1 = (array) $data1;
     $updatedData2 = (array) $data2;
