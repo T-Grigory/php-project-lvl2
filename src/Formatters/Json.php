@@ -12,8 +12,8 @@ function jsonFormatter(array $tree): string
             if ($type === 'node') {
                 return "\"{$key}\":{$iter($node['children'])}";
             } else {
-                $value1 = $node['value'][0];
-                $value2 = $type === 'changed' ? $node['value'][1] : '';
+                $value1 = $node['value'];
+                $value2 = $type === 'changed' ? $node['value2'] : '';
 
                 $updatedValue1 = json_encode($value1);
                 $updatedValue2 = json_encode($value2);

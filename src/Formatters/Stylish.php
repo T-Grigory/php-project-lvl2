@@ -33,18 +33,17 @@ function stylish(array $tree, string $replacer = ' ', int $spaceCount = 4, int $
                     $newIndentSize,
                     $innerIter
                 ) {
-
                     $key = $node['name'];
                     $type = $node['type'];
 
                     if ($type === 'node') {
                         return "{$currentIndent}  {$key}: {$iter($node['children'], $newIndentSize, $innerIter)}";
                     } else {
-                        $value1 = $node['value'][0];
+                        $value1 = $node['value'];
                         $normalizeBefore = is_object($value1) ? (array) $value1 : $value1;
                         $before = $iter($normalizeBefore, $newIndentSize, true);
 
-                        $value2 = $type === 'changed' ? $node['value'][1] : '';
+                        $value2 = $type === 'changed' ? $node['value2'] : '';
                         $normalizeAfter = is_object($value2) ? (array) $value2 : $value2;
                         $after = $iter($normalizeAfter, $newIndentSize, true);
 

@@ -27,8 +27,8 @@ function plainFormatter(array $tree): string
             } else {
                 $template = "Property '{$property}' was";
 
-                $value1 = $node['value'][0];
-                $value2 = $type === 'changed' ? $node['value'][1] : '';
+                $value1 = $node['value'];
+                $value2 = $type === 'changed' ? $node['value2'] : '';
 
                 $updatedValue1 = getNormalizeValue($value1);
                 $updatedValue2 = getNormalizeValue($value2);

@@ -32,25 +32,26 @@ function generateAST(object $data1, object $data2): array
                 return [
                     "name" => $key,
                     "type" => "removed",
-                    "value" => [$value1]
+                    "value" => $value1
                 ];
             } elseif (!$isKeyExistsData1 && $isKeyExistsData2) {
                 return [
                     "name" => $key,
                     "type" => "added",
-                    "value" => [$value2]
+                    "value" => $value2
                 ];
             } elseif ($value1 !== $value2) {
                 return [
                     "name" => $key,
                     "type" => "changed",
-                    "value" => [$value1, $value2]
+                    "value" => $value1,
+                    "value2" => $value2
                 ];
             } else {
                 return [
                     "name" => $key,
                     "type" => "unchanged",
-                    "value" => [$value1]
+                    "value" => $value1
                 ];
             }
         }
