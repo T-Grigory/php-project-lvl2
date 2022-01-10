@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\AST;
+namespace Differ\DiffBuilder;
 
 use function Functional\sort;
 

@@ -24,9 +24,10 @@
         },
         "files": [
             "src/Differ.php",
-            "src/AST.php",
+            "src/DiffBuilder.php",
+            "src/DataPreparation.php",
             "src/Parsers.php",
-            "src/Format.php",
+            "src/Formatters.php",
             "src/Formatters/Stylish.php",
             "src/Formatters/Plain.php",
             "src/Formatters/Json.php"
