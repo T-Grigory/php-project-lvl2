@@ -4,11 +4,13 @@ namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-const EXTENSIONS_YAML = ['yml', 'yaml'];
-
-function parser(string $data, string $extension): object
+function getDataParsing(string $data, string $extension): object
 {
-    return in_array($extension, EXTENSIONS_YAML, true) ?
-        Yaml::parse($data, Yaml::PARSE_OBJECT_FOR_MAP) :
-        json_decode($data);
+    $extension = $extension === 'yaml' ? 'yml' : $extension;
+
+    return match ($extension) {
+        'yml' => Yaml::parse($data, Yaml::PARSE_OBJECT_FOR_MAP),
+        'json' => json_decode($data),
+        default => throw new \Exception("uknown extension: '{$extension}'!"),
+    };
 }
